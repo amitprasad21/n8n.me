@@ -1,0 +1,344 @@
+{
+  "name": "Ai Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# Simple AI Agent",
+        "height": 80,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -352,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "2c567221-fcaa-41be-a223-5d31ed936872",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=##Overview\n\nYou are a helpful, intelligent executive assistant AI Agent designed to handle various tasks efficiently. Your primary role is to draft emails and get calendar events. You have access to 2 tools to help you fulfill requests:\n\n##Tools\n\nGmail: Gmail will be used to draft an email. The first step is identifying what email we are drafting the email to, then understanding the context of the email and then actually drafting it.\n\nCalendar: This tool will be used to get calendar events for any given timeframe.\n\n##Rules:\n\n- When a task requires using one or more of these tools, make sure to identify which tool is most appropriate, pass along the relevant details, and execute the actions needed to complete the task.\n- Your goal is to be proactive, precise, and organized in managing these resources to provide a smooth experience for the user.\n\nHere is the current time/date:   {{ $now.toFormat('yyyy-MM-dd HH:mm') }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -304,
+        144
+      ],
+      "id": "0c01c5a2-df35-451c-bf82-74c4ade3f394",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "content": "## Agent + Prompt\nPrompt Structure for Agent\n",
+        "height": 336,
+        "width": 672,
+        "color": "#471858"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -496,
+        48
+      ],
+      "typeVersion": 1,
+      "id": "3d27f3ea-41f7-46fe-8ea3-e8e0145dab01",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## chat \nThis is where we chat with the agent(the trigger)\n",
+        "height": 688,
+        "width": 288,
+        "color": "#93902F"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -832,
+        112
+      ],
+      "typeVersion": 1,
+      "id": "039f3be8-220e-439b-9c39-b257d685e7c4",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -768,
+        256
+      ],
+      "id": "bf5a4899-def3-457e-89a3-4ab12f88bd03",
+      "name": "Telegram Trigger",
+      "webhookId": "64b71b6b-2eed-45d4-bfaa-c8a067149ee4"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -752,
+        624
+      ],
+      "id": "e6ac77a3-ecbf-4c1d-bb89-d06da3376600",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wPwFwmuRon71wArk",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## LLM + Memory\nThe LLM and as the brain and the memory for the agen",
+        "height": 304,
+        "width": 416,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -496,
+        496
+      ],
+      "typeVersion": 1,
+      "id": "ced676c8-a4df-42d9-b2bc-6e5fd57d1bcf",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -448,
+        656
+      ],
+      "id": "10799d5a-78f8-4690-8533-50dfdc1f0738",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "oleFvbVuIdcz5uPJ",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -256,
+        656
+      ],
+      "id": "9bca9bef-b5b1-4866-8680-609e2036cf3f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "content": "## Tools(Software)\nThese will be the software accessible for the AI Agent",
+        "height": 304,
+        "width": 432,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        496
+      ],
+      "typeVersion": 1,
+      "id": "c0a59249-6a5e-4427-bac6-125ab59540e0",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        656
+      ],
+      "id": "7b517d72-4f07-4b7c-857f-3ff216dbe6e8",
+      "name": "Create an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "uzEaaYZC5wyMWX4V",
+          "name": "Google Calendar OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "=",
+        "message": "=",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        32,
+        640
+      ],
+      "id": "b8d6472b-0a4a-480a-ac04-34922ee1140f",
+      "name": "Create a draft in Gmail",
+      "webhookId": "4da5892f-647f-41cd-8208-65b8b34ceeff",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wPwFwmuRon71wArk",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -752,
+        448
+      ],
+      "id": "bcb88a94-987e-414d-b6f9-d311f56a638d",
+      "name": "When chat message received",
+      "webhookId": "76e67d06-21d0-4994-a193-e448bb12666b"
+    },
+    {
+      "parameters": {
+        "content": "# Multi-Step AI Agent\n",
+        "height": 80,
+        "width": 368
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1152,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "cbbc758d-b9f2-45c6-9fb5-d00576588a85",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "![img](https://drive.google.com/file/d/1vLH3jisL5K4odDl-RvwNhBJBGKLoGt73/view)",
+        "height": 288,
+        "width": 800
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        944,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "179bc052-d5c6-4f3d-9fb6-8f92bb86b40e",
+      "name": "Sticky Note6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b3ea6ab0-9e6a-4090-a43b-361d337bf7a4",
+  "meta": {
+    "instanceId": "eac29999dec5e9ef1f2efe848f69dbc5614cfd656c8db5320979b69cba9789f1"
+  },
+  "id": "1Ce06U5ws0azB11L",
+  "tags": []
+}

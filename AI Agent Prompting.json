@@ -1,0 +1,355 @@
+{
+  "name": "AI Agent Prompting",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## General Ai Agent\n",
+        "height": 464,
+        "width": 736,
+        "color": "#575B25"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -112
+      ],
+      "id": "0844d184-0c41-4317-8b57-e42e0f995101",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -224,
+        -32
+      ],
+      "id": "c38cedf1-6bd1-4c03-9dca-950a7e763f38",
+      "name": "When chat message received",
+      "webhookId": "a83d6bec-5bf7-4d38-8eb7-773c4ac5fdd6"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "# Overview\nYou are a helpful intelligent personal assistant. Your purpose is to send emails to customers.\n\n# Tools\n- Send Message: This tool will be used when sending emails to customers\n\n# Rules\n- Always make sure to have an email address before sending an email\n- Never send an email if you don't have an email address\n- If unsure, just ask the user to clarify\n\n#Output format (optional)\nFormat all responses as:\n- Short concise sentence\n\n## Examples (Optional)\nUser:  make a LinkedIn post about  life\nAgent:   "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -16,
+        -32
+      ],
+      "id": "6b812d4e-520d-463a-8db0-3c84ebec6371",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -128,
+        192
+      ],
+      "id": "1899c011-3327-412a-a3f5-f245c693faf9",
+      "name": "Brain",
+      "credentials": {
+        "openAiApi": {
+          "id": "oleFvbVuIdcz5uPJ",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        176
+      ],
+      "id": "9056420d-3f9e-41e0-aa20-c75790251a0a",
+      "name": "Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        144,
+        176
+      ],
+      "id": "6b6c89a7-0989-4536-8996-1a37ad01c1d1",
+      "name": "Send a message in Gmail",
+      "webhookId": "3340d683-65e8-4ff1-aa04-d8aa27a5c4b3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wPwFwmuRon71wArk",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Telegram Ai Agent \n",
+        "height": 496,
+        "width": 816,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        448
+      ],
+      "id": "d62778d2-dd16-4745-b03c-19c9fc76b46f",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -288,
+        528
+      ],
+      "id": "57d5499b-cef7-4884-9647-08b6c0838fe5",
+      "name": "Telegram Trigger",
+      "webhookId": "dc188d59-0af6-45ec-9f64-e2c72ddc28af"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "## Overview\nYou are helpful intelligent personal AI\nassistant integrated with Telegram.\n\nYour purpose is to help the user manage\ncommunications efficiently by retrieving the\ncorrect contact and sending accurate, well-\nformatted emails on command.\n\n## Tools\n- **Get Contacts**: Retrieves contact details\n(name, email).\n  → Use this first to verify the recipient or\nretrieve missing contact information.\n- **Send Email**: Sends emails to contacts.\n\n## Rules\n- Never assume missing details; always ask for\nclarification.\n- If unsure, respond with: **“Can you confirm\nwho I should send this email to?”**\n- Keep messages short, clear, and structured\nwhen replying on Telegram."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -80,
+        528
+      ],
+      "id": "bdb6bf97-4de0-488c-8218-97a9e585d6a3",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -240,
+        752
+      ],
+      "id": "631c749d-1593-48f3-8177-0aba521c820a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "oleFvbVuIdcz5uPJ",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -32,
+        752
+      ],
+      "id": "9d30016a-fc1d-4dc4-a0b7-79a2be1e1f63",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dwoOe8cL6RXggofv",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        176,
+        752
+      ],
+      "id": "bebd9287-5701-434e-8ca0-a1ff729ba771",
+      "name": "Send a message in Gmail1",
+      "webhookId": "169a3304-7157-4cf6-b335-5d9060dc2003",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wPwFwmuRon71wArk",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        272,
+        528
+      ],
+      "id": "ed2dbff6-ef0a-40cd-bf13-afe53ac1b8c2",
+      "name": "Send a text message",
+      "webhookId": "f743b7ec-5d15-4773-9838-6e5559777aaf"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brain": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9eafcac5-34b2-49cb-b6c5-b79051e47cb6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eac29999dec5e9ef1f2efe848f69dbc5614cfd656c8db5320979b69cba9789f1"
+  },
+  "id": "4KUxxABw3FE7oRL6",
+  "tags": []
+}

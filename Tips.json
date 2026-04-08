@@ -1,0 +1,48 @@
+{
+  "name": "Tips",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "1. Always use latest version  of n8n ( go Admin Panel -> mange -> select latest stable version\n2. To Deactivated the node -> select the node and press \"d\"\n3.  not charge for test execution | and only 14 days for free platform trails.\n4. we can pin the data  of the node for the next node \n5. we ca use Ai \n6. we can add image  in notes -> ![IMG](Image url)\n7. we can rename the out put of switch case\n8.  we can remove  n8n watermark from any  email or other by -> go advanced option in node -> Append n8n  -> turn off\n9.  we can design the  custom form or custom email template. \n10. we can loop the  workflow using loop node (example we have 500 items  but other node has 50 window capacity then we loop that part to complete the execution.\n11. we can edit the pin output for the next node.\n12. system promt rule -> 1. ## Overview 2. Tools 3 Rules\n13.  gpt for n8n research -> https://chatgpt.com/g/g-SVatmGSdQ-n8n-assistant-by-nskha\n14. use import curl in http nodes\n15. we can limit the  item in http -> by using -> option -> Batching -> set the limit  per batch , then set the interveral time.\n16. we can setup the error notification for the workflow | for setup this -> go ... no top right -> setting -> Error Workflow (to notify when this one errors) -> Add that particular error wrokflow.\n\n17. we can add human in the loop using different app  (we need to setup / install )\n",
+        "height": 592,
+        "width": 864
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -448,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "2221989b-20f8-46fd-96f5-8315cd2da23d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "![img](https://images.dog.ceo/breeds/spaniel-japanese/n02085782_3354.jpg)",
+        "height": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        448,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "2c006823-72d9-400d-97ed-101729ba27ef",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "5aec0bad-2e1b-4a08-9a53-9294decf4e3a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eac29999dec5e9ef1f2efe848f69dbc5614cfd656c8db5320979b69cba9789f1"
+  },
+  "id": "wxu4P1QGM5Sa7nCo",
+  "tags": []
+}

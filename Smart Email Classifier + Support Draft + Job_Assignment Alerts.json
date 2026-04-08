@@ -1,0 +1,732 @@
+{
+  "name": "Smart Email Classifier + Support Draft + Job/Assignment Alerts",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "id": "e8fd8bbe-698f-40b9-acc1-f4f29496f66c",
+      "name": "Gmail Trigger",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1568,
+        1296
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "emailText",
+              "value": "={{ \"Subject: \" + ($json.Subject || \"\") + \"\\n\" + \"From: \" + ($json.From || \"\") + \"\\n\" + \"To: \" + ($json.To || \"\") + \"\\n\" + \"Snippet: \" + ($json.snippet || \"\") }}",
+              "type": "string"
+            },
+            {
+              "name": "subjectLine",
+              "value": "={{ $json.Subject || \"\" }}",
+              "type": "string"
+            },
+            {
+              "name": "senderName",
+              "value": "={{ ($json.From || \"\").split(\"<\")[0].trim() }}",
+              "type": "string"
+            },
+            {
+              "name": "senderEmail",
+              "value": "={{ (($json.From || \"\").match(/<([^>]+)>/) || [])[1] || ($json.From || \"\") }}",
+              "type": "string"
+            },
+            {
+              "name": "snippetText",
+              "value": "={{ $json.snippet || \"\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a7626f1a-65a1-47d4-bbb9-a4467e744660",
+      "name": "Prepare_Email_Text",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1088,
+        1296
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.emailText }}"
+      },
+      "id": "70a10aba-bec1-485a-83c1-8b8da0d2e415",
+      "name": "Email_Classifier_AI",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        -448,
+        1296
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.1
+        }
+      },
+      "id": "122bae49-3648-4692-beb6-c4893be1a34b",
+      "name": "OpenAI Classifier Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -448,
+        1472
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.text || $json.output || $json.response || JSON.stringify($json);\nlet parsed;\n\ntry {\n  parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;\n} catch (e) {\n  parsed = {\n    category: 'Spam',\n    priority: 'low',\n    reason: 'Failed to parse classifier output'\n  };\n}\n\nreturn [{\n  json: {\n    ...$input.first().json,\n    category: parsed.category || 'Spam',\n    priority: parsed.priority || 'low',\n    reason: parsed.reason || 'No reason provided'\n  }\n}];"
+      },
+      "id": "406befe8-3d4b-4c00-b71e-e3c34c13d460",
+      "name": "Parse_Classifier_Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16,
+        1296
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "Support",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "Order_Query",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "Job_Opportunity",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "Assignment",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "Promotional",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "Spam",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2e61359d-5321-458f-9185-dd24756bb58c",
+      "name": "Route_By_Category",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        384,
+        1296
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Email received : {{ $json.emailText }}\n\nFrom : {{ $json.senderEmail }}",
+        "options": {
+          "systemMessage": "# Overview\nYou are a customer support email assistant for our e-commerce store called NovaMart.\n\nYour job is to read incoming customer emails, find the correct information using the available tools, and draft clear, professional, and helpful email replies.\n\nYou should always respond in a polite, human, and customer-friendly tone.\n\n# Tools\n- Vector_store  \nUse this tool first to retrieve relevant company knowledge, store policies, product information, shipping details, return/refund policies, FAQs, and any support-related context.\n\n- email_draft  \nUse this tool to draft the final email reply to the customer.\n\n# Rules\n- ALWAYS use Vector_store before answering any customer inquiry.\n- NEVER make up information if it is not found in the Vector_store.\n- If the information is missing or unclear, politely say that you need more details or that the support team will follow up.\n- ALWAYS draft a complete email reply.\n- Keep replies concise, clear, and professional.\n- Answer the customer’s exact question directly.\n- If multiple questions are asked, answer each one clearly.\n- Do not mention internal tools.\n- Start with a polite greeting.\n- End politely.\n- Sign the email as:\n\nBest regards,\nAmit Prasad\nNovaMart Support"
+        }
+      },
+      "id": "670aee11-41b9-44f3-a39e-f857054e7a78",
+      "name": "AI Support Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        832,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "2fc9fdd4-2d68-44dc-aa8d-4cc496443e15",
+      "name": "OpenAI Support Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        832,
+        896
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Use company support knowledge to answer support and order questions.",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list"
+        },
+        "topK": 10,
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "id": "2588377a-dca1-44e9-8b9b-98d05cfeae3d",
+      "name": "Vector_store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        1056,
+        1344
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "f9d6c87f-8143-4a09-9428-ff982e3a1114",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1056,
+        1536
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "sendTo": "={{ $json.senderEmail }}"
+        }
+      },
+      "id": "ffd36148-5950-4428-ac2c-b40777ed9d88",
+      "name": "Create Gmail Draft",
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        1328
+      ],
+      "webhookId": "4a93c5c7-2205-4337-9699-f4de809e7810"
+    },
+    {
+      "parameters": {
+        "text": "=📩 New Important Email\n\nCategory: {{ $json.category }}\nPriority: {{ $json.priority }}\n\nFrom: {{ $json.senderName }}\nEmail: {{ $json.senderEmail }}\nSubject: {{ $json.subjectLine }}\n\nReason: {{ $json.reason }}\n\nSnippet:\n{{ $json.snippetText }}",
+        "additionalFields": {}
+      },
+      "id": "75633a21-0649-4a98-9073-38733d99bdc6",
+      "name": "Telegram Important Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1728,
+        736
+      ],
+      "webhookId": "81b5b0c7-13bd-43ef-abd5-c3184be85df2"
+    },
+    {
+      "parameters": {
+        "text": "=💼 Job Opportunity Detected\n\nPriority: {{ $json.priority }}\n\nFrom: {{ $json.senderName }}\nEmail: {{ $json.senderEmail }}\nSubject: {{ $json.subjectLine }}\n\nReason: {{ $json.reason }}\n\nSnippet:\n{{ $json.snippetText }}",
+        "additionalFields": {}
+      },
+      "id": "68fab69d-5156-46e2-9220-41bffedd7423",
+      "name": "Telegram Job Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        1408
+      ],
+      "webhookId": "042d213d-8bd6-49c3-8432-aa2d0b118995"
+    },
+    {
+      "parameters": {
+        "text": "=📚 Assignment / Academic Task Detected\n\nPriority: {{ $json.priority }}\n\nFrom: {{ $json.senderName }}\nEmail: {{ $json.senderEmail }}\nSubject: {{ $json.subjectLine }}\n\nReason: {{ $json.reason }}\n\nSnippet:\n{{ $json.snippetText }}",
+        "additionalFields": {}
+      },
+      "id": "f8686e4d-8852-4895-8f30-9ed5680724e0",
+      "name": "Telegram Assignment Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        1584
+      ],
+      "webhookId": "b892cc80-fb22-459d-ab67-5fe8edecb2a3"
+    },
+    {
+      "parameters": {
+        "text": "=📢 Promotional Email Detected\n\nFrom: {{ $json.senderName }}\nSubject: {{ $json.subjectLine }}\nReason: {{ $json.reason }}",
+        "additionalFields": {}
+      },
+      "id": "926bce24-63f5-4dba-ac38-665bd0def81c",
+      "name": "Telegram Promo Optional",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        1792
+      ],
+      "webhookId": "5e5422ce-480e-4dc7-a40e-9c1d9db702b9"
+    },
+    {
+      "parameters": {
+        "content": "## 📥 Incoming Email Trigger\nThis section watches your Gmail inbox for **new incoming emails**.\n\n### What it does:\n- Checks Gmail every minute\n- Pulls sender, subject, snippet, and metadata\n- Starts the full automation\n\n### Why it matters:\nThis is the **entry point** of the workflow. Every new email begins here.",
+        "height": 452,
+        "width": 364,
+        "color": 5
+      },
+      "id": "a206cc12-73b8-4f50-812e-0d717d2ac1eb",
+      "name": "Sticky Note - Incoming",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1712,
+        992
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🧹 Prepare Email Data\nThis section cleans and formats the email before sending it to AI.\n\n### It extracts:\n- Subject line\n- Sender name\n- Sender email\n- Snippet/body preview\n\n### Why it matters:\nAI performs much better when the email is passed in a **structured format** instead of raw Gmail output.",
+        "height": 456,
+        "width": 416,
+        "color": 6
+      },
+      "id": "a7c1bc9e-b64a-46be-b00c-bd915058c2fc",
+      "name": "Sticky Note - Prepare",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1248,
+        992
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🧠 AI Email Classification Engine\nThis is the **main decision-making layer**.\n\n### It classifies emails into:\n- Promotional\n- Support\n- Order_Query\n- Job_Opportunity\n- Assignment\n- Spam\n\n### Output format:\nIt returns clean JSON with:\n- category\n- priority\n- reason\n\n### Why it matters:\nThis prevents you from manually sorting your inbox.",
+        "height": 644,
+        "width": 588,
+        "color": 4
+      },
+      "id": "5a164761-5112-41a0-bce6-d2fe58abbafe",
+      "name": "Sticky Note - Classifier",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        992
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🛡️ Output Parsing Safety Layer\nThis section ensures the AI output is **safe and usable**.\n\n### What it does:\n- Parses AI JSON response\n- Prevents workflow crashes\n- Falls back to `Spam` if output is invalid\n\n### Why it matters:\nWithout this, bad model output can break the workflow.",
+        "height": 612,
+        "width": 380,
+        "color": 3
+      },
+      "id": "02c6e8e7-3573-4678-b2bd-06f4c27a731c",
+      "name": "Sticky Note - Parser",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        992
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🔀 Smart Routing by Category\nThis section decides **what should happen next** based on the email category.\n\n### Routing logic:\n- Support → AI Support Agent\n- Order_Query → AI Support Agent\n- Job_Opportunity → Telegram Alert\n- Assignment → Telegram Alert\n- Promotional → Optional Alert / Ignore\n- Spam → Ignore\n\n### Why it matters:\nThis makes the workflow fully automated and action-based.",
+        "height": 660,
+        "width": 460,
+        "color": 7
+      },
+      "id": "ef8a5d90-45cf-4f94-bc95-e4979e1026e5",
+      "name": "Sticky Note - Routing",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        208,
+        992
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🤖 AI Support & Order Reply Assistant\nThis section handles emails that need a **proper response**.\n\n### It is used for:\n- Support emails\n- Order-related customer queries\n\n### What it does:\n- Understands the email\n- Uses your knowledge base\n- Drafts a professional reply\n\n### Why it matters:\nThis saves time and creates accurate customer support drafts.",
+        "height": 596,
+        "width": 508,
+        "color": 4
+      },
+      "id": "33b1c0b4-4622-4486-856f-a998c04cd809",
+      "name": "Sticky Note - Support Agent",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        656,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 📚 Vector Knowledge Base (RAG)\nThis section lets the AI search your stored support documents.\n\n### It can retrieve:\n- FAQs\n- Policies\n- Shipping info\n- Refund rules\n- Product info\n- Internal support knowledge\n\n### Why it matters:\nThis reduces hallucination and improves reply accuracy.",
+        "height": 700,
+        "width": 548,
+        "color": 2
+      },
+      "id": "b1b693de-7c63-4e17-9fb1-7323e41d1270",
+      "name": "Sticky Note - Vector Store",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        1008
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## ✉️ Gmail Draft Creation\nThis section creates a **draft reply** instead of sending emails automatically.\n\n### Why this is better:\n- You stay in control\n- You can review before sending\n- Safer for real-world use\n\n### Best practice:\nAlways test with drafts first before enabling any auto-send logic.",
+        "height": 436,
+        "width": 380,
+        "color": 5
+      },
+      "id": "baf7cfe6-c029-4d92-9945-4bdfb5f09223",
+      "name": "Sticky Note - Gmail Draft",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        1008
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 📲 Telegram Alerts Section\nThis section sends you **instant notifications** for important emails.\n\n### You will be alerted for:\n- Job opportunities\n- Assignments\n- Important support/order emails\n- Optional promotional emails\n\n### Why it matters:\nYou won’t miss recruiter emails or urgent academic tasks.",
+        "height": 556,
+        "width": 420,
+        "color": 3
+      },
+      "id": "5e58b97e-ee15-4f91-b427-aca9a9a56b5d",
+      "name": "Sticky Note - Telegram",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Setup Instructions (Read Before Use)\n### After Import:\n1. Reconnect Gmail\n2. Reconnect OpenAI\n3. Reconnect Telegram\n4. Reconnect Supabase\n\n### Replace placeholders:\n- YOUR_GMAIL_CRED_ID\n- YOUR_OPENAI_CRED_ID\n- YOUR_SUPABASE_CRED_ID\n- YOUR_TELEGRAM_CRED_ID\n\n### Recommended test emails:\n- Internship offer\n- College assignment\n- Promo/newsletter\n- Support complaint\n- Order delay email",
+        "height": 420,
+        "width": 828
+      },
+      "id": "4fa39c17-63de-44be-ba69-1ec157f25c61",
+      "name": "Sticky Note - Setup",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        1936
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare_Email_Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare_Email_Text": {
+      "main": [
+        [
+          {
+            "node": "Email_Classifier_AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Classifier Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Email_Classifier_AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email_Classifier_AI": {
+      "main": [
+        [
+          {
+            "node": "Parse_Classifier_Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse_Classifier_Output": {
+      "main": [
+        [
+          {
+            "node": "Route_By_Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route_By_Category": {
+      "main": [
+        [
+          {
+            "node": "AI Support Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Support Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram Job Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram Assignment Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram Promo Optional",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Support Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Support Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector_store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Support Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Vector_store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Gmail Draft": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Support Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Support Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram Important Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "81b393ea-c802-4003-b0d6-7a4291d30ddf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eac29999dec5e9ef1f2efe848f69dbc5614cfd656c8db5320979b69cba9789f1"
+  },
+  "id": "hQ7nMy9wUqJRNUyC",
+  "tags": []
+}

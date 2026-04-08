@@ -1,0 +1,471 @@
+{
+  "name": "Error Handling",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Retry when failure\nWe tell it to re-run X amount of times before it stops",
+        "height": 368,
+        "width": 640,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -272,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "8ae89bbf-2738-4217-bb1e-67b2d835877e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "url": "https://dog.ceo/api/breeds/image/random",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -64,
+        16
+      ],
+      "id": "f5f62b1d-9614-4d10-bb2e-a637996af811",
+      "name": "HTTP Request",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        16
+      ],
+      "id": "bbfcb88c-9ccf-47ad-89f9-44893b8a7fbf",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        16
+      ],
+      "id": "ff5469c9-6fda-4a15-9b4e-d18d94b4d1ef",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "content": "## Continue when Failed\n We allow the workflow to continue even if it fails\n",
+        "height": 368,
+        "width": 656,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        400,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "80a017db-7308-4978-8190-80593bccd47b",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "url": "https://dog.ceo/api/breeds/image1/random",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        576,
+        0
+      ],
+      "id": "57672677-a8a4-442a-b2f6-06b8b932b6c2",
+      "name": "HTTP Request1",
+      "retryOnFail": false,
+      "waitBetweenTries": 5000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f39f11cb-8f1f-4ecc-9480-81cc6ade0e78",
+              "name": "error.message",
+              "value": "={{ $json.error.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        0
+      ],
+      "id": "27fda705-e1f9-4285-8a36-67959413df13",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "content": "## Split error Route\nWe give it a route to go when it fails\n",
+        "height": 368,
+        "width": 816,
+        "color": "#2F2659"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1136,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "50600500-2a46-4bd2-82c0-192fb7018663",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "url": "https://dog.ceo/api/breeds/image1/random",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1248,
+        0
+      ],
+      "id": "8b89169d-055e-456b-8e89-bb5ffd7429ea",
+      "name": "HTTP Request2",
+      "retryOnFail": false,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1472,
+        -80
+      ],
+      "id": "24147610-beab-43e7-9913-edb33c73f9d2",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "sendTo": "amitprasad212003@gmail.com",
+        "subject": "=Error",
+        "message": "={{ $json.error.message }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1488,
+        112
+      ],
+      "id": "8013480e-acdc-47fc-a590-f1cd407e8b6e",
+      "name": "Send a message",
+      "webhookId": "bb26ff88-c8af-4636-8146-198d4fa8a3ea",
+      "notesInFlow": false,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "myOQvakk3I9njx9B",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Fallback Ai Agent LLM\nIf one LLM doesn't work, we can use another one as backup\n",
+        "height": 464,
+        "width": 768,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -352,
+        336
+      ],
+      "typeVersion": 1,
+      "id": "a3157fab-a930-44aa-b4f5-bb3ef25f2c79",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "needsFallback": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -48,
+        448
+      ],
+      "id": "5caf1f74-9e7d-475b-b3d7-de0d62242d86",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -240,
+        448
+      ],
+      "id": "10cd83ae-ed42-460f-b004-40dda1882429",
+      "name": "When chat message received",
+      "webhookId": "1b4dad09-0638-44e8-91b8-d776f32b9e60"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        640
+      ],
+      "id": "4124b08d-768f-4a55-9554-da78bdcdd404",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "oleFvbVuIdcz5uPJ",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-5-20250929",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -16,
+        640
+      ],
+      "id": "da49c442-03c9-4eae-ad50-c69a0daafd2c",
+      "name": "Anthropic Chat Model"
+    },
+    {
+      "parameters": {
+        "content": "## Error Workflow\nwe set up a new workflow for incoming errors from other workflows\n",
+        "height": 448,
+        "width": 720,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        512,
+        352
+      ],
+      "typeVersion": 1,
+      "id": "2befe064-a332-4c66-91f9-a07ea676bef8",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        592,
+        464
+      ],
+      "id": "b88663d4-d09e-4d35-b9b5-4f36ceb9d356",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://dog.ceo/api/breeds/image/random",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        768,
+        464
+      ],
+      "id": "69de3ebd-2823-42fe-8dbc-c8431da4efcd",
+      "name": "HTTP Request3",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        976,
+        464
+      ],
+      "id": "96bc233b-6b51-4431-9ca9-2ad1b7ea2878",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        784,
+        656
+      ],
+      "id": "306c6955-3ae1-49bc-bbfa-697aaaa5dec3",
+      "name": "Error Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b66f0ec7-4f8f-4777-a3b0-1564c8aa5e3a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eac29999dec5e9ef1f2efe848f69dbc5614cfd656c8db5320979b69cba9789f1"
+  },
+  "id": "cLOuASDVYGf5vSqe",
+  "tags": []
+}

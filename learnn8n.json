@@ -1,0 +1,562 @@
+{
+  "name": "learnn8n",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        416
+      ],
+      "id": "320474fa-5f8b-4d53-991d-cdebc13cf9ae",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api.weatherapi.com/v1/current.json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "839e930c3ad24899b8c84418262403"
+            },
+            {
+              "name": "q",
+              "value": "West Bengal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"locations\": [\n    {\n      \"q\": \"53,-0.12\",\n      \"custom_id\": \"my-id-1\"\n    },\n    {\n      \"q\": \"London\",\n      \"custom_id\": \"any-internal-id\"\n    },\n    {\n      \"q\": \"90201\",\n      \"custom_id\": \"us-zipcode-id-765\"\n    }\n  ]\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "940717c5-5dc8-4315-8097-bee597aa7e4e",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "11fdd473-ce88-49f1-a55e-9df5ba0c168b",
+              "name": "temperature",
+              "value": "={{ $json.current.temp_c }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "82a145e7-697d-4de8-ad17-845d83a94c9a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "## Triggers\n",
+        "height": 288,
+        "width": 784
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -80,
+        352
+      ],
+      "typeVersion": 1,
+      "id": "e2247365-f772-4e1e-b7ed-9413c9015fd3",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        416
+      ],
+      "id": "42ff82fd-ec61-494d-b1f6-859144d25257",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.typeformTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        496,
+        416
+      ],
+      "id": "888be30c-ea30-4b64-a71e-97d115a0ef36",
+      "name": "Typeform Trigger",
+      "webhookId": "4d647cb0-f8d4-4f78-9751-9d4c7326445f"
+    },
+    {
+      "parameters": {
+        "content": "## Storage Solutions\n- Database Nose : Connect to any external API or service GET, POST & Authentication.\n- Database Notes :\n\n",
+        "height": 336,
+        "width": 848,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        768
+      ],
+      "typeVersion": 1,
+      "id": "b94a0cc1-2f14-41f5-9ca9-9925c76c7632",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        96,
+        912
+      ],
+      "id": "7e80b058-5910-4424-b171-9083a8694e83",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dwoOe8cL6RXggofv",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        432,
+        912
+      ],
+      "id": "d9a5955a-9748-4a3f-8fe2-3c737e74e716",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "content": "## Universal Data Processing \n\n- Spilt : Flatten a data Structure\n-Aggregate : merge a data structure (nest)\n- Set : Create and modify data fields - the most versatile node\n- IF :  Add Decision-making logic to route information differently\n-Code : custom Manipulation for complex transformationsff",
+        "height": 624,
+        "width": 832
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        1216
+      ],
+      "typeVersion": 1,
+      "id": "21853930-5a93-44c8-a847-63ca6922d68b",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2492e144-36cd-4368-941d-522d9410432a",
+              "name": "",
+              "value": "[   {     \"name\": \"Amit Sharma\",     \"number\": \"9876543210\",     \"email\": \"amit.sharma@example.com\",     \"sex\": \"Male\",     \"course\": \"B.Tech Computer Science\"   },   {     \"name\": \"Priya Verma\",     \"number\": \"9123456780\",     \"email\": \"priya.verma@example.com\",     \"sex\": \"Female\",     \"course\": \"BBA\"   },   {     \"name\": \"Rahul Singh\",     \"number\": \"9988776655\",     \"email\": \"rahul.singh@example.com\",     \"sex\": \"Male\",     \"course\": \"B.Com\"   },   {     \"name\": \"Sneha Gupta\",     \"number\": \"9012345678\",     \"email\": \"sneha.gupta@example.com\",     \"sex\": \"Female\",     \"course\": \"MBA\"   },   {     \"name\": \"Arjun Patel\",     \"number\": \"9090909090\",     \"email\": \"arjun.patel@example.com\",     \"sex\": \"Male\",     \"course\": \"B.Sc IT\"   } ]",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        64,
+        1472
+      ],
+      "id": "eadb72ce-e307-4948-bfa0-ba0b2cf0b640",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "include": "selectedOtherFields",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        208,
+        1472
+      ],
+      "id": "3668c463-7caa-4216-a5cc-70428e559480",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        368,
+        1472
+      ],
+      "id": "bd418dcf-2d2e-41a4-bbca-912de0bfb351",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2c9078d3-2527-4ee0-a24a-a0eb1618e18d",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        608,
+        1472
+      ],
+      "id": "e392f821-5921-4b74-ad0e-a0938be10d52",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2676deda-d495-49ad-ae44-14ecab6d78b2"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        1664
+      ],
+      "id": "9f2e27f7-65c5-4775-a963-e72cb4068a80",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        256,
+        1664
+      ],
+      "id": "d9d66290-52df-4b0a-91a2-ba91d938a990",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        512,
+        1664
+      ],
+      "id": "7205e4aa-4972-468c-b753-5ed8d1f1cc4f",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "content": "## Connectivity & APIs\n\n-HTTP Request: Connect to any external API or service. Get, POST & Authentication\n-Webhook Response: Send Data back after pricessing \n",
+        "height": 336,
+        "width": 704,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        80,
+        1952
+      ],
+      "typeVersion": 1,
+      "id": "cb5dfb24-0ac3-48cf-8e0d-9d67b2693aa4",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        112,
+        2112
+      ],
+      "id": "1702d141-592f-4199-b8a4-51ead161592d",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "path": "959d701e-8c8f-4eb8-81f4-395499205b1f",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        352,
+        2112
+      ],
+      "id": "95ac80d8-67d1-49dd-9aeb-acb6726e6526",
+      "name": "Webhook",
+      "webhookId": "959d701e-8c8f-4eb8-81f4-395499205b1f"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        560,
+        2112
+      ],
+      "id": "77c0dc2e-3c51-4ed3-8e22-70d7a42e53e8",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "content": "## Ai Integration\n\n- Ai step : OpenAI , Claude etc..\n- Ai Agent : Non determenisitic output.",
+        "height": 384,
+        "width": 848,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        2432
+      ],
+      "typeVersion": 1,
+      "id": "63b617b5-e9c0-4da3-86c7-64b2a27e9ac0",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "responses": {
+          "values": [
+            {}
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        112,
+        2592
+      ],
+      "id": "586c144a-a913-4070-8763-3ca7993cd431",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "oleFvbVuIdcz5uPJ",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        528,
+        2592
+      ],
+      "id": "f90e53db-4db3-4871-92b8-aa8638f1e539",
+      "name": "AI Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        []
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "917c7095-9a6f-4752-b11d-c7b450449d0d",
+  "meta": {
+    "instanceId": "eac29999dec5e9ef1f2efe848f69dbc5614cfd656c8db5320979b69cba9789f1"
+  },
+  "id": "OfFlYpJAlv1HlWEd",
+  "tags": []
+}

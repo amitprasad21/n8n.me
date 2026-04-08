@@ -1,0 +1,209 @@
+{
+  "name": "Web Scraping",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://www.amitprasad21.tech/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        128,
+        32
+      ],
+      "id": "c04cddff-9c14-45af-b536-55586ae15d63",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "content": "## 1. HTTP\n",
+        "height": 224,
+        "width": 464
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        64,
+        -32
+      ],
+      "id": "e550dad6-a107-494b-9a16-b27b4dfd216d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "website text",
+              "cssSelector": "body"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        288,
+        32
+      ],
+      "id": "0d0e0745-973c-44f4-ba6e-44f0de7d83a1",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "content": "## 1. HTTP Node\n### -> Use it when\n- You just need to quick, raw data (HTML, JSON, APIs).\n- The website is static (no JavaScript).\n- You're testing or building a simple automation.\n\n### -> Pros : \n- Fast and free.\n- No extra setup or accounts needed.\n-  works great for APIs or plain Pages.\n\n### -> Cons:\n- Gives messy, Unreadable HTML.\n- Can't handle JavaScript-heavy sites.\n- Easy to get IP Blocked if Scraping a lot.",
+        "height": 416,
+        "width": 464
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        64,
+        208
+      ],
+      "id": "2cefd690-315c-420e-95b1-0eab6870b2e1",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## 2. Fire Crawl\n",
+        "height": 224,
+        "width": 448,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        608,
+        -32
+      ],
+      "id": "9d7bb36a-e98b-4d16-b048-77ad3cf36145",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "scrape",
+        "url": "https://www.amitprasad21.tech/",
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        688,
+        32
+      ],
+      "id": "b7e9f805-719a-42b3-ad7a-ee72b3650f9e",
+      "name": "/scrape",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "R8PkDVxdsuJXX6Uu",
+          "name": "Firecrawl API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 2. Firecrawl \n### -> Use it when: \n- You want to clean, readable website content.\n- you're scraping modern/ dynamic sites.\n- You want data from bans and errors.\n\n### -> Pros : \n- Handles JavaScript sites easily.\n- Returns clean Markdown or JSON.\n- Use random proxies (avoids bans).\n- Can map, search, or extract data at scale.\n\n### -> Cons: \n- Need API Keys + small cost per crawl.\n- Slightly slower than a raw HTTP request.",
+        "height": 400,
+        "width": 448,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        608,
+        208
+      ],
+      "id": "83f7e36b-9ad6-408a-b2ec-c1a9a73f5603",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## 3. Apify\n",
+        "height": 224,
+        "width": 416,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        -32
+      ],
+      "id": "e741c21d-66dd-4f88-834a-9ed8759e5984",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "actorId": {
+          "__rl": true,
+          "value": "aYG0l9s7dbB7j3gbS",
+          "mode": "list",
+          "cachedResultName": "Website Content Crawler (apify/website-content-crawler)",
+          "cachedResultUrl": "https://console.apify.com/actors/aYG0l9s7dbB7j3gbS/input"
+        },
+        "customBody": "{\n    \"aggressivePrune\": false,\n    \"blockMedia\": true,\n    \"clickElementsCssSelector\": \"[aria-expanded=\\\"false\\\"]\",\n    \"clientSideMinChangePercentage\": 15,\n    \"crawlerType\": \"playwright:adaptive\",\n    \"debugLog\": false,\n    \"debugMode\": false,\n    \"expandIframes\": true,\n    \"ignoreCanonicalUrl\": false,\n    \"ignoreHttpsErrors\": false,\n    \"keepUrlFragments\": false,\n    \"proxyConfiguration\": {\n        \"useApifyProxy\": true\n    },\n    \"readableTextCharThreshold\": 100,\n    \"removeCookieWarnings\": true,\n    \"removeElementsCssSelector\": \"nav, footer, script, style, noscript, svg, img[src^='data:'],\\n[role=\\\"alert\\\"],\\n[role=\\\"banner\\\"],\\n[role=\\\"dialog\\\"],\\n[role=\\\"alertdialog\\\"],\\n[role=\\\"region\\\"][aria-label*=\\\"skip\\\" i],\\n[aria-modal=\\\"true\\\"]\",\n    \"renderingTypeDetectionPercentage\": 10,\n    \"respectRobotsTxtFile\": true,\n    \"reuseStoredDetectionResults\": false,\n    \"saveFiles\": false,\n    \"saveHtml\": false,\n    \"saveHtmlAsFile\": false,\n    \"saveMarkdown\": true,\n    \"saveScreenshots\": false,\n    \"signHttpRequests\": false,\n    \"startUrls\": [\n        {\n            \"url\": \"https://docs.apify.com/academy/scraping-basics-javascript\"\n        }\n    ],\n    \"storeSkippedUrls\": false,\n    \"useLlmsTxt\": false,\n    \"useSitemaps\": false\n}",
+        "authentication": "apifyOAuth2Api"
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        1168,
+        32
+      ],
+      "id": "215c4bae-730d-48ea-9083-b002a0edfdac",
+      "name": "Run an Actor",
+      "credentials": {
+        "apifyOAuth2Api": {
+          "id": "EBeoeXWsVeQ10ZJz",
+          "name": "Apify OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 3. Apify\n### -> Use it when:\n- Your'e doing large-scale scrapping or complex projects(linkedIn, Amazon, etc.).\n- You need built scrapers or browser automation.\n\n### -> Pros: \n- Huge Library of pre-made scrappers(\"actors\").\n- Cloud-based (no setup).\n- Handles login-based or com[lex sites.\n\n### -> Cons :\n- Can get expensive at scale.\n- More setup setps for custom logic.\n- Overkill for small, simple scrapes.",
+        "height": 368,
+        "width": 416,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        224
+      ],
+      "id": "b1eb7632-1426-4b4a-ae98-624eb9251ba6",
+      "name": "Sticky Note5"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "3dac7874-513a-4604-a948-5384a9d7d22d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eac29999dec5e9ef1f2efe848f69dbc5614cfd656c8db5320979b69cba9789f1"
+  },
+  "id": "3opeTCtgv1moMKVL",
+  "tags": []
+}
